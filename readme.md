@@ -4,6 +4,7 @@ The Console Java Engine is based off of JavidX9's PixelGameEngine.
 
 Uses Lanterna to emulate a terminal, also comes with a Pair class that is a basic copy of C++s pair class.
 
+Requires Java 17+
 
 ## How to use
 

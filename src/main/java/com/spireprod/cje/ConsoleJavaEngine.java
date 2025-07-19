@@ -7,8 +7,6 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -17,6 +15,9 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalResizeListener;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
+import com.spireprod.cje.core.ConsoleRenderer;
+import com.spireprod.cje.core.scenes.Scene;
+import com.spireprod.cje.core.scenes.SceneManager;
 
 public abstract class ConsoleJavaEngine {
 
@@ -26,7 +27,8 @@ public abstract class ConsoleJavaEngine {
 	protected String PIXEL_SHADE_HALF = "\u2592";
 
 	protected Terminal terminal;
-	protected TextGraphics termGraphics;
+	protected SceneManager sceneManager;
+	protected ConsoleRenderer renderer;
 	protected KeyStroke termKey;
 	protected SwingTerminalFrame frame;
 	protected Screen screen;
@@ -37,26 +39,28 @@ public abstract class ConsoleJavaEngine {
 	private final int targetFPS = 60;
 	private final long optimalTime = (long) (1E9f / targetFPS);
 
-	public static final String CJE_VERSION = "0.1.10-Talos";
+	public static final String CJE_VERSION = "0.1.15-Talos";
 
 	public ConsoleJavaEngine(String title, int width, int height) {
 		DefaultTerminalFactory defaultTermFactory = new DefaultTerminalFactory();
-		defaultTermFactory.setTerminalEmulatorTitle(title).setInitialTerminalSize(new TerminalSize(width, height))
-				.setForceAWTOverSwing(false).setPreferTerminalEmulator(true);
+		defaultTermFactory.setTerminalEmulatorTitle(title + " -" + CJE_VERSION)
+				.setInitialTerminalSize(new TerminalSize(width, height)).setForceAWTOverSwing(false)
+				.setPreferTerminalEmulator(true);
 
 		try {
 			terminal = defaultTermFactory.createSwingTerminal();
 			frame = (SwingTerminalFrame) terminal;
-			frame.setVisible(true);
 			frame.pack();
+			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.setVisible(true);
 
 			screen = new TerminalScreen(terminal);
+			termWidth = frame.getTerminalSize().getColumns();
+			termHeight = frame.getTerminalSize().getRows();
 
-			this.termWidth = frame.getTerminalSize().getColumns();
-			this.termHeight = frame.getTerminalSize().getRows();
-
-			this.termGraphics = screen.newTextGraphics();
+			sceneManager = new SceneManager();
+			renderer = new ConsoleRenderer(screen.newTextGraphics());
 
 			frame.addResizeListener(new TerminalResizeListener() {
 
@@ -116,12 +120,6 @@ public abstract class ConsoleJavaEngine {
 
 	protected abstract void onGameCreate();
 
-	protected abstract void onGameUpdate(float deltaTime);
-
-	protected abstract void onGameInput(float deltaTime, KeyStroke keyStroke);
-
-	protected abstract void onGameRender(float deltaTime);
-
 	public void run() {
 
 		isRunning = true;
@@ -135,6 +133,18 @@ public abstract class ConsoleJavaEngine {
 		});
 
 		gameLoop.start();
+	}
+
+	private void onGameUpdate(float deltaTime) {
+		sceneManager.sceneUpdate(deltaTime);
+	}
+
+	private void onGameInput(float deltaTime, KeyStroke key) {
+		sceneManager.sceneInput(deltaTime, key);
+	}
+
+	private void onGameRender(ConsoleRenderer renderer) {
+		sceneManager.sceneRender(renderer);
 	}
 
 	private void loop() throws IOException, InterruptedException {
@@ -166,7 +176,9 @@ public abstract class ConsoleJavaEngine {
 
 			onGameUpdate(delta);
 
-			onGameRender(delta);
+			renderer.clearScreen();
+
+			onGameRender(renderer);
 			screen.refresh();
 
 			long sleepNanos = (lastLoopTime - System.nanoTime() + optimalTime);
@@ -180,35 +192,9 @@ public abstract class ConsoleJavaEngine {
 		screen.stopScreen();
 	}
 
-//	private void loop() throws IOException {
-//
-//		screen.startScreen();
-//		screen.setCursorPosition(null);
-//
-//		final float targetDelta = 1f / targetFPS;
-//		float accumulator = 0f;
-//		long lastTime = System.nanoTime();
-//
-//		while (isRunning) {
-//			long now = System.nanoTime();
-//			float deltaTime = (now - lastTime) / 1E9f;
-//			lastTime = now;
-//
-
-//
-//			accumulator += deltaTime;
-//
-//			while (accumulator >= targetDelta) {
-
-//
-//				accumulator -= targetDelta;
-//			}
-//
-
-//		}
-//
-//		screen.stopScreen();
-//	}
+	protected void setScene(Scene scene) {
+		sceneManager.setScene(scene);
+	}
 
 	// -----------------------------------
 	// Getters and Setters
@@ -219,37 +205,6 @@ public abstract class ConsoleJavaEngine {
 
 	public int getTerminalHeight() {
 		return termHeight;
-	}
-
-	// -----------------------------------
-	// Drawing Methods
-
-	public void writeString(char str, int x, int y, TextColor backgroundColor, TextColor textColor) {
-		termGraphics.setBackgroundColor(backgroundColor);
-		termGraphics.setForegroundColor(textColor);
-		termGraphics.setCharacter(x, y, str);
-	}
-
-	public void writeString(char str, int x, int y, TextColor backgroundColor) {
-		writeString(str, x, y, backgroundColor, TextColor.ANSI.WHITE);
-	}
-
-	public void writeString(char str, int x, int y) {
-		writeString(str, x, y, TextColor.ANSI.BLACK);
-	}
-
-	public void writeString(String str, int x, int y, TextColor backgroundColor, TextColor textColor) {
-		termGraphics.setBackgroundColor(backgroundColor);
-		termGraphics.setForegroundColor(textColor);
-		termGraphics.putString(x, y, str);
-	}
-
-	public void writeString(String str, int x, int y, TextColor backgroundColor) {
-		writeString(str, x, y, backgroundColor, TextColor.ANSI.WHITE);
-	}
-
-	public void writeString(String str, int x, int y) {
-		writeString(str, x, y, TextColor.ANSI.BLACK, TextColor.ANSI.WHITE);
 	}
 
 }
