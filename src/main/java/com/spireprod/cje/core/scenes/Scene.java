@@ -9,6 +9,8 @@ public interface Scene {
 
 	void onSceneRender(ConsoleRenderer renderer);
 
+	void onSceneUIRender(ConsoleRenderer renderer, Input input);
+	
 	void onSceneInput(float delta, Input input);
 
 }

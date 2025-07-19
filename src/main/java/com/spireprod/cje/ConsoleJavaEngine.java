@@ -1,7 +1,5 @@
 package com.spireprod.cje;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -74,35 +72,6 @@ public abstract class ConsoleJavaEngine {
 				}
 
 			});
-
-			frame.addMouseListener(new MouseListener() {
-
-				@Override
-				public void mouseClicked(MouseEvent e) {
-
-				}
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-
-				}
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-
-				}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-
-				}
-			});
-
 			frame.addWindowListener(new WindowListener() {
 
 				@Override
@@ -174,6 +143,10 @@ public abstract class ConsoleJavaEngine {
 		sceneManager.sceneInput(deltaTime, input);
 	}
 
+	private void onGameUIRender(ConsoleRenderer renderer, Input input) {
+		sceneManager.sceneUIRender(renderer, input);
+	}
+
 	private void onGameRender(ConsoleRenderer renderer) {
 		sceneManager.sceneRender(renderer);
 	}
@@ -202,7 +175,6 @@ public abstract class ConsoleJavaEngine {
 				input.update(termKey);
 
 			onGameInput(delta, input);
-			input.endFrame();
 
 			onGameUpdate(delta);
 
@@ -210,7 +182,10 @@ public abstract class ConsoleJavaEngine {
 			renderer.clearScreen();
 
 			onGameRender(renderer);
+			onGameUIRender(renderer, input);
+
 			screen.refresh();
+			input.endFrame(); // Moved Here for UI Input
 
 			long sleepNanos = (lastLoopTime - System.nanoTime() + optimalTime);
 			if (sleepNanos > 0) {

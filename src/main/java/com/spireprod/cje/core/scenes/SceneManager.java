@@ -20,6 +20,11 @@ public class SceneManager {
 			currentScene.onSceneInput(deltaTime, input);
 	}
 
+	public void sceneUIRender(ConsoleRenderer renderer, Input input) {
+		if (currentScene != null)
+			currentScene.onSceneUIRender(renderer, input);
+	}
+	
 	public void sceneRender(ConsoleRenderer renderer) {
 		if (currentScene != null)
 			currentScene.onSceneRender(renderer);
