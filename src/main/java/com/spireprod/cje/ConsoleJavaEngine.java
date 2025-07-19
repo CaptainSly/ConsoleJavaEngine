@@ -18,6 +18,7 @@ import com.spireprod.cje.core.ConsoleRenderer;
 import com.spireprod.cje.core.input.Input;
 import com.spireprod.cje.core.scenes.Scene;
 import com.spireprod.cje.core.scenes.SceneManager;
+import com.spireprod.cje.core.ui.TextUI;
 
 public abstract class ConsoleJavaEngine {
 
@@ -28,6 +29,7 @@ public abstract class ConsoleJavaEngine {
 
 	protected Terminal terminal;
 	protected SceneManager sceneManager;
+	protected TextUI ctx;
 	protected ConsoleRenderer renderer;
 	protected Input input;
 	protected SwingTerminalFrame frame;
@@ -143,8 +145,8 @@ public abstract class ConsoleJavaEngine {
 		sceneManager.sceneInput(deltaTime, input);
 	}
 
-	private void onGameUIRender(ConsoleRenderer renderer, Input input) {
-		sceneManager.sceneUIRender(renderer, input);
+	private void onGameUIRender(TextUI ctx, ConsoleRenderer renderer, Input input) {
+		sceneManager.sceneUIRender(ctx, renderer, input);
 	}
 
 	private void onGameRender(ConsoleRenderer renderer) {
@@ -182,7 +184,11 @@ public abstract class ConsoleJavaEngine {
 			renderer.clearScreen();
 
 			onGameRender(renderer);
-			onGameUIRender(renderer, input);
+			
+			// CJE-IMGUI Stuff
+			ctx.reset();
+			onGameUIRender(ctx, renderer, input);
+			ctx.handleInput(input);
 
 			screen.refresh();
 			input.endFrame(); // Moved Here for UI Input
