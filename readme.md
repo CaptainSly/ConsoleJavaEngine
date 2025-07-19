@@ -1,4 +1,4 @@
-# Console Java Engine - Version 0.1.15-Talos
+# Console Java Engine - Version 0.1.15-Jyggalag
 [![](https://jitpack.io/v/CaptainSly/ConsoleJavaEngine.svg)](https://jitpack.io/#CaptainSly/ConsoleJavaEngine)
 
 The Console Java Engine is based off of JavidX9's PixelGameEngine.

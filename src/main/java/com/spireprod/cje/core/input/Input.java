@@ -67,4 +67,5 @@ public class Input {
 		}
 		return new KeyStroke(stroke.getKeyType());
 	}
+	
 }
