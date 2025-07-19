@@ -1,5 +1,7 @@
 package com.spireprod.cje;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -8,7 +10,6 @@ import javax.swing.JFrame;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -16,6 +17,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalResizeListener;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 import com.spireprod.cje.core.ConsoleRenderer;
+import com.spireprod.cje.core.input.Input;
 import com.spireprod.cje.core.scenes.Scene;
 import com.spireprod.cje.core.scenes.SceneManager;
 
@@ -29,7 +31,7 @@ public abstract class ConsoleJavaEngine {
 	protected Terminal terminal;
 	protected SceneManager sceneManager;
 	protected ConsoleRenderer renderer;
-	protected KeyStroke termKey;
+	protected Input input;
 	protected SwingTerminalFrame frame;
 	protected Screen screen;
 	protected boolean isRunning = false;
@@ -39,7 +41,7 @@ public abstract class ConsoleJavaEngine {
 	private final int targetFPS = 60;
 	private final long optimalTime = (long) (1E9f / targetFPS);
 
-	public static final String CJE_VERSION = "0.1.15-Talos";
+	public static final String CJE_VERSION = "0.1.15-Jyggalag";
 
 	public ConsoleJavaEngine(String title, int width, int height) {
 		DefaultTerminalFactory defaultTermFactory = new DefaultTerminalFactory();
@@ -59,6 +61,7 @@ public abstract class ConsoleJavaEngine {
 			termWidth = frame.getTerminalSize().getColumns();
 			termHeight = frame.getTerminalSize().getRows();
 
+			input = new Input();
 			sceneManager = new SceneManager();
 			renderer = new ConsoleRenderer(screen.newTextGraphics());
 
@@ -70,6 +73,34 @@ public abstract class ConsoleJavaEngine {
 					termHeight = newSize.getRows();
 				}
 
+			});
+
+			frame.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+
+				}
 			});
 
 			frame.addWindowListener(new WindowListener() {
@@ -139,8 +170,8 @@ public abstract class ConsoleJavaEngine {
 		sceneManager.sceneUpdate(deltaTime);
 	}
 
-	private void onGameInput(float deltaTime, KeyStroke key) {
-		sceneManager.sceneInput(deltaTime, key);
+	private void onGameInput(float deltaTime, Input input) {
+		sceneManager.sceneInput(deltaTime, input);
 	}
 
 	private void onGameRender(ConsoleRenderer renderer) {
@@ -166,16 +197,16 @@ public abstract class ConsoleJavaEngine {
 				this.termHeight = newSize.getRows();
 			}
 
-			termKey = screen.pollInput();
+			KeyStroke termKey;
+			while ((termKey = screen.pollInput()) != null)
+				input.update(termKey);
 
-			if (termKey != null && termKey.getKeyType().equals(KeyType.Escape))
-				isRunning = false;
-
-			if (termKey != null)
-				onGameInput(delta, termKey);
+			onGameInput(delta, input);
+			input.endFrame();
 
 			onGameUpdate(delta);
 
+			renderer.setTextGraphics(screen.newTextGraphics());
 			renderer.clearScreen();
 
 			onGameRender(renderer);

@@ -1,4 +1,5 @@
-# Console Java Engine - Version 0.1.10-Talos
+# Console Java Engine - Version 0.1.15-Talos
+[![](https://jitpack.io/v/CaptainSly/ConsoleJavaEngine.svg)](https://jitpack.io/#CaptainSly/ConsoleJavaEngine)
 
 The Console Java Engine is based off of JavidX9's PixelGameEngine.
 
@@ -8,7 +9,7 @@ Requires Java 17+
 
 ## How to use
 
-To use CJE, include it in your project, then create a class and extend the `ConsoleJavaEngine`. It provides a Skeleton for your project and also provides protected methods to write to the screen. 
+To use CJE, include it in your project, then create a class and extend the `ConsoleJavaEngine`. It provides a Skeleton for your project. After that all you need to do is create different `Scene` classes for you game. The `ConsoleRenderer` class holds methods to write to the screen. 
 
 ```Java
 
@@ -23,36 +24,39 @@ public class Adventure extends ConsoleJavaEngine {
 
 	@Override
 	protected void onGameCreate() {
-
-	}
-
-	@Override
-	protected void onGameUpdate(float deltaTime) {
-
-	}
-
-	@Override
-	protected void onGameInput(float deltaTime, KeyStroke keyStroke) {
-
-	}
-
-	@Override
-	protected void onGameRender(float alpha) {
-
-	}
-
-	public static void main(String[] args) {
-		Adventure venture = new Adventure();
-		venture.run();
+		setScene(new GameScreen());
 	}
 
 }
+
+import com.googlecode.lanterna.input.KeyStroke;
+import com.spireprod.cje.core.ConsoleRenderer;
+import com.spireprod.cje.core.scenes.Scene;
+
+public class GameScene implements Scene {
+
+	@Override
+	public void onSceneUpdate(float delta) {
+
+	}
+
+	@Override
+	public void onSceneRender(ConsoleRenderer renderer) {
+
+	}
+
+	@Override
+	public void onSceneInput(float delta, KeyStroke key) {
+
+	}
+
+}
+
 
 ```
 
 
 ### Jitpack
-[![](https://jitpack.io/v/CaptainSly/ConsoleJavaEngine.svg)](https://jitpack.io/#CaptainSly/ConsoleJavaEngine)
 
 ConsoleJavaEngine is available through [Jitpack](https://jitpack.io). Here's what you want to use:
 

@@ -1,7 +1,7 @@
 package com.spireprod.cje.core.scenes;
 
-import com.googlecode.lanterna.input.KeyStroke;
 import com.spireprod.cje.core.ConsoleRenderer;
+import com.spireprod.cje.core.input.Input;
 
 public class SceneManager {
 
@@ -15,9 +15,9 @@ public class SceneManager {
 			currentScene.onSceneUpdate(deltaTime);
 	}
 
-	public void sceneInput(float deltaTime, KeyStroke key) {
+	public void sceneInput(float deltaTime, Input input) {
 		if (currentScene != null)
-			currentScene.onSceneInput(deltaTime, key);
+			currentScene.onSceneInput(deltaTime, input);
 	}
 
 	public void sceneRender(ConsoleRenderer renderer) {

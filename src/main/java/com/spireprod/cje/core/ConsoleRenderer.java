@@ -6,7 +6,7 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 public class ConsoleRenderer {
 
 	private TextGraphics graphics;
-	
+
 	public ConsoleRenderer(TextGraphics graphics) {
 		this.graphics = graphics;
 	}
@@ -42,6 +42,10 @@ public class ConsoleRenderer {
 
 	public void writeString(String str, int x, int y) {
 		writeString(str, x, y, TextColor.ANSI.BLACK, TextColor.ANSI.WHITE);
+	}
+
+	public void setTextGraphics(TextGraphics graphics) {
+		this.graphics = graphics;
 	}
 
 }
