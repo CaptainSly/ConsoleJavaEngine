@@ -1,4 +1,4 @@
-package com.spireprod.cje.util;
+package com.spireprod.cje.core;
 
 public class Pair<T, U> {
 	public T first;

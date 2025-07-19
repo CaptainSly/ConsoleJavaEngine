@@ -16,7 +16,7 @@ import com.googlecode.lanterna.terminal.TerminalResizeListener;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 import com.spireprod.cje.core.ConsoleRenderer;
 import com.spireprod.cje.core.input.Input;
-import com.spireprod.cje.core.scenes.Scene;
+import com.spireprod.cje.core.scenes.AbstractScene;
 import com.spireprod.cje.core.scenes.SceneManager;
 import com.spireprod.cje.core.ui.TextUI;
 
@@ -57,6 +57,7 @@ public abstract class ConsoleJavaEngine {
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			frame.setVisible(true);
 
+			ctx = new TextUI();
 			screen = new TerminalScreen(terminal);
 			termWidth = frame.getTerminalSize().getColumns();
 			termHeight = frame.getTerminalSize().getRows();
@@ -137,6 +138,10 @@ public abstract class ConsoleJavaEngine {
 		gameLoop.start();
 	}
 
+	public void stop() {
+		isRunning = false;
+	}
+
 	private void onGameUpdate(float deltaTime) {
 		sceneManager.sceneUpdate(deltaTime);
 	}
@@ -184,7 +189,7 @@ public abstract class ConsoleJavaEngine {
 			renderer.clearScreen();
 
 			onGameRender(renderer);
-			
+
 			// CJE-IMGUI Stuff
 			ctx.reset();
 			onGameUIRender(ctx, renderer, input);
@@ -204,7 +209,7 @@ public abstract class ConsoleJavaEngine {
 		screen.stopScreen();
 	}
 
-	protected void setScene(Scene scene) {
+	public void setScene(AbstractScene scene) {
 		sceneManager.setScene(scene);
 	}
 

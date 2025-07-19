@@ -6,7 +6,7 @@ import com.spireprod.cje.core.ui.TextUI;
 
 public class SceneManager {
 
-	private Scene currentScene;
+	private AbstractScene currentScene;
 
 	public SceneManager() {
 	}
@@ -31,7 +31,7 @@ public class SceneManager {
 			currentScene.onSceneRender(renderer);
 	}
 
-	public void setScene(Scene scene) {
+	public void setScene(AbstractScene scene) {
 		currentScene = scene;
 	}
 
