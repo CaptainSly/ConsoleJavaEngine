@@ -4,6 +4,9 @@ plugins {
     `java-library`
 }
 
+group = "com.spireprod"
+version = "0.1.10-Talos"
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -13,7 +16,7 @@ repositories {
 }
 
 dependencies {
-	implementation("com.googlecode.lanterna:lanterna:3.1.2")
+	api("com.googlecode.lanterna:lanterna:3.1.2")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -21,5 +24,8 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+    
+    withJavadocJar()
+    withSourcesJar()
 }
 

@@ -21,9 +21,9 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 public abstract class ConsoleJavaEngine {
 
 	protected String PIXEL_BLOCK = "\u2588";
+	protected String PIXEL_SHADE = "\u2591";
 	protected String PIXEL_SHADE_FULL = "\u2593";
 	protected String PIXEL_SHADE_HALF = "\u2592";
-	protected String PIXEL_SHADE = "\u2591";
 
 	protected Terminal terminal;
 	protected TextGraphics termGraphics;
@@ -37,7 +37,7 @@ public abstract class ConsoleJavaEngine {
 	private final int targetFPS = 60;
 	private final long optimalTime = (long) (1E9f / targetFPS);
 
-	public static final String CJE_VERSION = "0.1.5-Talos";
+	public static final String CJE_VERSION = "0.1.10-Talos";
 
 	public ConsoleJavaEngine(String title, int width, int height) {
 		DefaultTerminalFactory defaultTermFactory = new DefaultTerminalFactory();
