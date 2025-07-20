@@ -44,6 +44,20 @@ public class ConsoleRenderer {
 		writeString(str, x, y, TextColor.ANSI.BLACK, TextColor.ANSI.WHITE);
 	}
 
+	public void putChar(char c, int x, int y, TextColor textColor, TextColor backgroundColor) {
+		if (textColor == null)
+			textColor = TextColor.ANSI.BLACK;
+
+		graphics.setBackgroundColor(backgroundColor);
+		graphics.setForegroundColor(textColor);
+		graphics.setCharacter(x, y, c);
+	}
+
+	public void putChar(char c, int x, int y, TextColor textColor) {
+		graphics.setForegroundColor(textColor);
+		graphics.setCharacter(x, y, c);
+	}
+
 	public void setTextGraphics(TextGraphics graphics) {
 		this.graphics = graphics;
 	}

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.spireprod"
-version = "0.1.15-Jyggalag"
+version = "0.1.20-Jyggalag"
 
 repositories {
     // Use Maven Central for resolving dependencies.
