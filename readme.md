@@ -14,10 +14,15 @@ If you decide to use Console Java Engine to make your game with, first off thank
 As of version 0.1.20-Jyggalag the following is provided:
 
 A Scene system
+
 A Pair class that emulates the C++ Standard Library's. (I thought it'd be nice to have when I first wrote this, this might be removed later)
+
 A Colors class that holds RGB colors. These colors were sourced from the [website](html-color.codes) 
+
 A very basic Camera class. It's really basic camera.
+
 An Immediate Mode UI - I emulated how DearImGui works and currently adding features to the it as I go. 
+
 An Input class - It handles keyboard input. I've been trying to implement a `justPressed` feature, but Lanterna only let's you know a key was pressed and not when it was released, held or pressed. So I might have to dig deeper and develop a separate input system from Lanterna. 
 
 ## How to use
