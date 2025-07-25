@@ -33,6 +33,7 @@ public abstract class ConsoleJavaEngine {
 	public static final String PIXEL_SHADE_FULL = "\u2593";
 	public static final String PIXEL_SHADE_HALF = "\u2592";
 	public static int termWidth, termHeight;
+	public static int screenWidth, screenHeight;
 
 	protected Terminal terminal;
 	protected SceneManager sceneManager;
@@ -66,7 +67,8 @@ public abstract class ConsoleJavaEngine {
 
 		DefaultTerminalFactory defaultTermFactory = new DefaultTerminalFactory();
 
-		// Setup Default Font 'Ubuntu Mono'
+		// Setup Default Font 'Ascii Sector 16x16 Tileset'
+		// License is in resources folder/base jar.
 		Font font = null;
 		try {
 			InputStream is = ConsoleJavaEngine.class.getResourceAsStream("/ascii-sector-16x16-tileset.ttf");
@@ -81,7 +83,7 @@ public abstract class ConsoleJavaEngine {
 
 		GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
 
-		defaultTermFactory.setTerminalEmulatorTitle(title + " -" + CJE_VERSION)
+		defaultTermFactory.setTerminalEmulatorTitle(title + " - " + CJE_VERSION)
 				.setTerminalEmulatorFontConfiguration(
 						SwingTerminalFontConfiguration.newInstance(font.deriveFont(Font.PLAIN, 16)))
 				.setInitialTerminalSize(new TerminalSize(width, height)).setForceAWTOverSwing(false)
@@ -95,6 +97,9 @@ public abstract class ConsoleJavaEngine {
 			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			frame.setVisible(true);
+
+			screenWidth = frame.getWidth();
+			screenHeight = frame.getHeight();
 
 			ctx = new UIContext();
 			screen = new TerminalScreen(terminal);

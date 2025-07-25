@@ -14,6 +14,9 @@ public class Colors {
 	// Browns
 
 	public static RGB PULLMAN_BROWN = new RGB(100, 65, 23);
+	public static RGB BISQUE = new RGB(255, 228, 196);
+	public static RGB MOCCASIN = new RGB(255, 228, 181);
+	public static RGB NAVAJO_WHITE = new RGB(255, 222, 173);
 
 	// Tans
 
@@ -22,6 +25,8 @@ public class Colors {
 	// Peaches
 
 	// Golds
+	public static RGB GOLD = new RGB(255, 215, 0);
+	public static RGB BEIGE = new RGB(245, 245, 220);
 
 	// Yellows
 
@@ -30,10 +35,10 @@ public class Colors {
 	// Olives
 
 	// Greens
-
 	public static RGB GREEN = new RGB(0, 255, 0);
 	public static RGB LAWN_GREEN = new RGB(124, 252, 0);
 	public static RGB PHTHALO_GREEN = new RGB(18, 53, 36);
+	public static RGB MEDIUM_SPRING_GREEN = new RGB(0, 250, 154);
 
 	// Teals
 
@@ -42,6 +47,7 @@ public class Colors {
 	// Blues
 	public static RGB BLUE = new RGB(0, 0, 255);
 	public static RGB DODGER_BLUE = new RGB(30, 144, 255);
+	public static RGB MUNSELL_BLUE = new RGB(0, 147, 175);
 
 	// Navys
 

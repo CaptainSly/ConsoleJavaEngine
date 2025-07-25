@@ -1,7 +1,5 @@
 package com.spireprod.cje.core;
 
-import java.util.Random;
-
 public class Camera {
 	private float x, y; // top-left world coordinate of the view
 	private final int viewWidth, viewHeight;
@@ -10,11 +8,6 @@ public class Camera {
 	private float targetX, targetY;
 	private float panSpeed = 0;
 	private boolean isPanning = false;
-
-	// Shake
-	private float shakeTimer = 0;
-	private float shakeMagnitude = 0;
-	private final Random rng = new Random();
 
 	public Camera(int viewWidth, int viewHeight) {
 		this.viewWidth = viewWidth;
@@ -36,12 +29,6 @@ public class Camera {
 		isPanning = true;
 	}
 
-	// Shake the camera for a short time
-	public void shake(float duration, float magnitude) {
-		shakeTimer = duration;
-		shakeMagnitude = magnitude;
-	}
-
 	public void update(float deltaSeconds) {
 		if (Float.isNaN(x) || Float.isNaN(y)) {
 			System.err.println("Warning: NaN in camera coordinates. Resetting.");
@@ -61,19 +48,14 @@ public class Camera {
 				isPanning = false;
 			}
 		}
-
-		// Shake logic
-		if (shakeTimer > 0) {
-			shakeTimer -= deltaSeconds;
-		}
 	}
 
 	public int getViewX() {
-		return (int) x + getShakeOffset();
+		return (int) x;
 	}
 
 	public int getViewY() {
-		return (int) y + getShakeOffset();
+		return (int) y;
 	}
 
 	public int worldToScreenX(int worldX) {
@@ -82,10 +64,6 @@ public class Camera {
 
 	public int worldToScreenY(int worldY) {
 		return worldY - getViewY();
-	}
-
-	private int getShakeOffset() {
-		return (shakeTimer > 0) ? rng.nextInt((int) (shakeMagnitude * 2 + 1)) - (int) shakeMagnitude : 0;
 	}
 
 	private float lerp(float a, float b, float t) {

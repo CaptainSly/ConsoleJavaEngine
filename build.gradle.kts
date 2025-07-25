@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-	api("com.googlecode.lanterna:lanterna:3.1.2")
+	implementation("com.googlecode.lanterna:lanterna:3.1.2")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

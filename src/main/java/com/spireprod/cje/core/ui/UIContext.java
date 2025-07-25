@@ -2,10 +2,12 @@ package com.spireprod.cje.core.ui;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.function.Function;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyType;
 import com.spireprod.cje.ConsoleJavaEngine;
+import com.spireprod.cje.core.Colors;
 import com.spireprod.cje.core.ConsoleRenderer;
 import com.spireprod.cje.core.input.Input;
 
@@ -16,7 +18,7 @@ public class UIContext {
 	// Panel Offset Stack
 	private int offsetX = 0;
 	private int offsetY = 0;
-	private final Deque<int[]> offsetStack = new ArrayDeque<>();
+	private final Deque<int[]> offsetStack = new ArrayDeque<>(); // Panel OffsetStack
 
 	private ConsoleRenderer renderer;
 	private Input input;
@@ -110,6 +112,34 @@ public class UIContext {
 		return false;
 	}
 
+	public <T> boolean choiceBox(int x, int y, T[] boxObjs, int[] choiceIdx, Function<T, String> labelFunc,
+			TextColor backgroundColor, TextColor textColor) {
+		boolean fired = false;
+
+		for (int i = 0; i < boxObjs.length; i++) {
+			boolean isSelected = (selectedIndex == totalItems);
+			boolean choiceSelected = i == choiceIdx[0];
+
+			TextColor color = isSelected ? TextColor.ANSI.GREEN : textColor;
+			String prefix = isSelected ? "> " : "  ";
+
+			if (choiceSelected)
+				color = Colors.BLUE;
+
+			renderer.writeString(prefix + labelFunc.apply(boxObjs[i]), offsetX + x, offsetY + y + i, backgroundColor,
+					color);
+
+			if (isSelected && input.isKeyDown(KeyType.Enter)) {
+				fired = true;
+				choiceIdx[0] = i;
+			}
+
+			totalItems++;
+		}
+
+		return fired;
+	}
+
 	// region: Panel
 
 	public void beginPanel(int x, int y, int width, int height, TextColor backgroundColor) {
@@ -124,15 +154,18 @@ public class UIContext {
 		}
 
 		// Top/Bottom border
-		renderer.writeString("+" + "-".repeat(width - 2) + "+", offsetX, offsetY, backgroundColor,
+		renderer.writeString("+" + buildChainLine(width - 2) + "+", offsetX, offsetY, backgroundColor,
 				TextColor.ANSI.WHITE);
-		renderer.writeString("+" + "-".repeat(width - 2) + "+", offsetX, offsetY + height - 1, backgroundColor,
+		renderer.writeString("+" + buildChainLine(width - 2) + "+", offsetX, offsetY + height - 1, backgroundColor,
 				TextColor.ANSI.WHITE);
 
 		// Left/Right border
+		char[] sideChain = new char[] { '|', ':' };
+
 		for (int iy = 1; iy < height - 1; iy++) {
-			renderer.putChar('|', offsetX, offsetY + iy, TextColor.ANSI.WHITE, backgroundColor);
-			renderer.putChar('|', offsetX + width - 1, offsetY + iy, TextColor.ANSI.WHITE, backgroundColor);
+			char sideGlyph = sideChain[iy % sideChain.length];
+			renderer.putChar(sideGlyph, offsetX, offsetY + iy, TextColor.ANSI.WHITE, backgroundColor);
+			renderer.putChar(sideGlyph, offsetX + width - 1, offsetY + iy, TextColor.ANSI.WHITE, backgroundColor);
 		}
 
 	}
@@ -159,6 +192,18 @@ public class UIContext {
 			selectedIndex++;
 
 		selectedIndex = Math.floorMod(selectedIndex, totalItems);
+	}
+
+	private String buildChainLine(int length) {
+		String pattern = "-=";
+		StringBuilder sb = new StringBuilder();
+		while (sb.length() < length) {
+			sb.append(pattern);
+		}
+		return sb.substring(0, length);
+	}
+
+	public record Choice(Object choice, boolean fired) {
 	}
 
 }
